@@ -40,7 +40,7 @@
 
 ## ◈ Roadmap
 
-### 🤖 AI Tools — coming soon
+### 🤖 AI Tools
 
 Powered by **Gemini 2.0 Flash**. 3 free actions per day, no account needed.
 
