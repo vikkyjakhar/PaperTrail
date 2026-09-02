@@ -39,7 +39,7 @@
 
 ### 🤖 AI Tools
 
-Powered by **Gemini 2.0 Flash**. 3 free actions per day, no account needed.
+Powered by **Gemini 3.0 Flash**. no account needed.
 
 | | Tool | Description |
 |--|------|-------------|
