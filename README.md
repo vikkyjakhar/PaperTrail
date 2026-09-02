@@ -37,8 +37,6 @@
 
 ```
 
-```
-
 ### 🤖 AI Tools
 
 Powered by **Gemini 2.0 Flash**. 3 free actions per day, no account needed.
@@ -51,7 +49,6 @@ Powered by **Gemini 2.0 Flash**. 3 free actions per day, no account needed.
 | ❓ | Question Generator | Auto-generate study quizzes |
 | ✨ | AI Assistant | Rewrite, extract, analyze, format |
 
----
 
 ```
 ## ◈ Roadmap
