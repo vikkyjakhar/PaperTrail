@@ -4,7 +4,7 @@
 
 **Privacy-first PDF toolkit · runs entirely in your browser**
 
-### 🔗 [papertrailapp.netlify.app](https://papertrailapp.netlify.app)
+### 🔗 [papertrail.figma.site](https://papertrail.figma.site)
 
 ![Status](https://img.shields.io/badge/status-in_development-3ECF8E?style=flat-square&labelColor=0D1512)
 ![License](https://img.shields.io/badge/license-MIT-8FA89B?style=flat-square&labelColor=0D1512)
