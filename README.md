@@ -34,11 +34,10 @@
 │  🔍  PDF OCR        │  Extract searchable text from scanned PDFs      │
 │  📋  Flatten PDF    │  Merge form fields into a static, flat PDF      │
 └─────────────────────┴────────────────────────────────────────────────┘
+
 ```
 
----
-
-## ◈ Roadmap
+```
 
 ### 🤖 AI Tools
 
@@ -51,6 +50,11 @@ Powered by **Gemini 2.0 Flash**. 3 free actions per day, no account needed.
 | 🌍 | Translate PDF | Any language, structure preserved |
 | ❓ | Question Generator | Auto-generate study quizzes |
 | ✨ | AI Assistant | Rewrite, extract, analyze, format |
+
+---
+
+```
+## ◈ Roadmap
 
 ### ☁️ Format Conversion — coming soon
 
