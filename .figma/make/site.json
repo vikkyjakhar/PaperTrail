@@ -1,0 +1,18 @@
+{
+  "title": "PaperTrail",
+  "description": "Free browser-based PDF toolkit — convert images to PDF, extract text with OCR, flatten forms & more. No uploads, no accounts, 100% private.",
+  "language": "en",
+  "robots": {
+    "index": false
+  },
+  "icons": {
+    "icon": "/.figma/make/favicon.png"
+  },
+  "openGraph": {
+    "image": "/.figma/make/social-image.png"
+  },
+  "accessibility": {
+    "addBypassLinks": false,
+    "ignoreReducedMotion": false
+  }
+}

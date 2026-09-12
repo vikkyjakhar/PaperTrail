@@ -1,0 +1,40 @@
+[debug] [2026-09-02T12:57:18.579Z] ----------------------------------------------------------------------
+[debug] [2026-09-02T12:57:18.581Z] Command:       C:\Program Files\nodejs\node.exe C:\Users\vikky\AppData\Local\npm-cache\_npx\7750544ccf494d8b\node_modules\firebase-tools\lib\bin\firebase.js projects:create papertrail-app-779834 --display-name PaperTrail
+[debug] [2026-09-02T12:57:18.581Z] CLI Version:   15.28.2
+[debug] [2026-09-02T12:57:18.581Z] Platform:      win32
+[debug] [2026-09-02T12:57:18.581Z] Node Version:  v24.7.0
+[debug] [2026-09-02T12:57:18.581Z] Detected Agent: antigravity
+[debug] [2026-09-02T12:57:18.581Z] Time:          Wed Sep 02 2026 18:27:18 GMT+0530 (India Standard Time)
+[debug] [2026-09-02T12:57:18.581Z] ----------------------------------------------------------------------
+[debug] 
+[debug] [2026-09-02T12:57:18.683Z] > command requires scopes: ["email","openid","https://www.googleapis.com/auth/cloudplatformprojects.readonly","https://www.googleapis.com/auth/firebase","https://www.googleapis.com/auth/cloud-platform"]
+[debug] [2026-09-02T12:57:18.684Z] > authorizing via signed-in user (vikkyjakhar2@gmail.com)
+[debug] [2026-09-02T12:57:18.690Z] Checked if tokens are valid: true, expires at: 1788357338752
+[debug] [2026-09-02T12:57:18.690Z] Checked if tokens are valid: true, expires at: 1788357338752
+[debug] [2026-09-02T12:57:18.691Z] >>> [apiv2][query] POST https://cloudresourcemanager.googleapis.com/v1/projects [none]
+[debug] [2026-09-02T12:57:18.691Z] >>> [apiv2][body] POST https://cloudresourcemanager.googleapis.com/v1/projects {"projectId":"papertrail-app-779834","name":"PaperTrail"}
+[debug] [2026-09-02T12:57:19.275Z] <<< [apiv2][status] POST https://cloudresourcemanager.googleapis.com/v1/projects 200
+[debug] [2026-09-02T12:57:19.275Z] <<< [apiv2][body] POST https://cloudresourcemanager.googleapis.com/v1/projects {"name":"operations/create_project.global.5688806394141277233"}
+[debug] [2026-09-02T12:57:19.276Z] Checked if tokens are valid: true, expires at: 1788357338752
+[debug] [2026-09-02T12:57:19.276Z] Checked if tokens are valid: true, expires at: 1788357338752
+[debug] [2026-09-02T12:57:19.276Z] >>> [apiv2][query] GET https://cloudresourcemanager.googleapis.com/v1/operations/create_project.global.5688806394141277233 [none]
+[debug] [2026-09-02T12:57:20.765Z] <<< [apiv2][status] GET https://cloudresourcemanager.googleapis.com/v1/operations/create_project.global.5688806394141277233 200
+[debug] [2026-09-02T12:57:20.765Z] <<< [apiv2][body] GET https://cloudresourcemanager.googleapis.com/v1/operations/create_project.global.5688806394141277233 {"name":"operations/create_project.global.5688806394141277233"}
+[debug] [2026-09-02T12:57:21.271Z] [Project Creation Poller] Retrying task index 0
+[debug] [2026-09-02T12:57:21.271Z] Checked if tokens are valid: true, expires at: 1788357338752
+[debug] [2026-09-02T12:57:21.271Z] Checked if tokens are valid: true, expires at: 1788357338752
+[debug] [2026-09-02T12:57:21.271Z] >>> [apiv2][query] GET https://cloudresourcemanager.googleapis.com/v1/operations/create_project.global.5688806394141277233 [none]
+[debug] [2026-09-02T12:57:21.626Z] <<< [apiv2][status] GET https://cloudresourcemanager.googleapis.com/v1/operations/create_project.global.5688806394141277233 200
+[debug] [2026-09-02T12:57:21.626Z] <<< [apiv2][body] GET https://cloudresourcemanager.googleapis.com/v1/operations/create_project.global.5688806394141277233 {"name":"operations/create_project.global.5688806394141277233","metadata":{"@type":"type.googleapis.com/google.cloudresourcemanager.v1.ProjectCreationStatus","gettable":true,"ready":true},"done":true,"response":{"@type":"type.googleapis.com/google.cloudresourcemanager.v1.Project","projectNumber":"1031129950576","projectId":"papertrail-app-779834","lifecycleState":"ACTIVE","name":"PaperTrail","createTime":"2026-09-02T12:57:19.809Z"}}
+[debug] [2026-09-02T12:57:21.627Z] Checked if tokens are valid: true, expires at: 1788357338752
+[debug] [2026-09-02T12:57:21.627Z] Checked if tokens are valid: true, expires at: 1788357338752
+[debug] [2026-09-02T12:57:21.627Z] >>> [apiv2][query] POST https://firebase.googleapis.com/v1beta1/projects/papertrail-app-779834:addFirebase [none]
+[debug] [2026-09-02T12:57:23.133Z] <<< [apiv2][status] POST https://firebase.googleapis.com/v1beta1/projects/papertrail-app-779834:addFirebase 403
+[debug] [2026-09-02T12:57:23.133Z] <<< [apiv2][body] POST https://firebase.googleapis.com/v1beta1/projects/papertrail-app-779834:addFirebase {"error":{"code":403,"message":"The caller does not have permission","status":"PERMISSION_DENIED"}}
+[debug] [2026-09-02T12:57:23.133Z] Request to https://firebase.googleapis.com/v1beta1/projects/papertrail-app-779834:addFirebase had HTTP Error: 403, The caller does not have permission
+[debug] [2026-09-02T12:57:23.376Z] FirebaseError: Request to https://firebase.googleapis.com/v1beta1/projects/papertrail-app-779834:addFirebase had HTTP Error: 403, The caller does not have permission
+    at responseToError (C:\Users\vikky\AppData\Local\npm-cache\_npx\7750544ccf494d8b\node_modules\firebase-tools\lib\responseToError.js:53:12)
+    at RetryOperation._fn (C:\Users\vikky\AppData\Local\npm-cache\_npx\7750544ccf494d8b\node_modules\firebase-tools\lib\apiv2.js:415:77)
+    at process.processTicksAndRejections (node:internal/process/task_queues:105:5)
+[error] 
+[error] Error: Failed to add Firebase to Google Cloud Platform project. See firebase-debug.log for more info.
