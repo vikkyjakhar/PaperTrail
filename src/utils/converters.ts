@@ -505,13 +505,13 @@ export async function wordToPdf(file: File): Promise<Blob> {
   const arrayBuffer = await file.arrayBuffer();
   const result = await mammoth.convertToHtml({ arrayBuffer });
   
-  const fullHtml = <!DOCTYPE html>
+  const fullHtml = `<!DOCTYPE html>
 <html><head><style>
   body { font-family: sans-serif; padding: 20px; line-height: 1.5; }
   table { border-collapse: collapse; width: 100%; margin-bottom: 20px; }
   th, td { border: 1px solid #ccc; padding: 8px; }
   img { max-width: 100%; height: auto; }
-</style></head><body>\</body></html>;
+</style></head><body>${result.value}</body></html>`;
 
   const htmlFile = new File([fullHtml], "word.html", { type: "text/html" });
   return await htmlToPdf(htmlFile);
@@ -524,13 +524,13 @@ export async function excelToPdf(file: File): Promise<Blob> {
   const worksheet = workbook.Sheets[firstSheetName];
   const html = XLSX.utils.sheet_to_html(worksheet);
   
-  const fullHtml = <!DOCTYPE html>
+  const fullHtml = `<!DOCTYPE html>
 <html><head><style>
   body { font-family: sans-serif; padding: 20px; }
   table { border-collapse: collapse; width: 100%; }
   th, td { border: 1px solid #ccc; padding: 8px; text-align: left; }
   th { background-color: #f4f4f4; }
-</style></head><body>\</body></html>;
+</style></head><body>${html}</body></html>`;
 
   const htmlFile = new File([fullHtml], "excel.html", { type: "text/html" });
   return await htmlToPdf(htmlFile);
