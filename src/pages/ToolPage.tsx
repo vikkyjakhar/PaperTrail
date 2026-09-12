@@ -45,6 +45,7 @@ const MULTI_FILE_TOOLS = new Set(['image-to-pdf']);
 const REAL_TOOLS = new Set([
   'image-to-pdf', 'pdf-to-jpg', 'txt-to-pdf',
   'csv-to-pdf', 'html-to-pdf', 'pdf-ocr', 'flatten-pdf',
+  'pdf-to-word', 'pdf-to-excel', 'word-to-pdf', 'excel-to-pdf', 'compress-pdf', 'protect-pdf'
 ]);
 
 function ToolIcon({ name, size = 20 }: { name: string; size?: number }) {
