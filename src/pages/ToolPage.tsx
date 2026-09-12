@@ -106,9 +106,9 @@ async function runConverter(
     case 'flatten-pdf':
       return { kind: 'blob', blob: await flattenPdf(file), filename };
     case 'pdf-to-word':
-      return { kind: 'blob', blob: await pdfToWord(file, onPageProgress), filename };
+      return { kind: 'blob', blob: await pdfToWord(file, (pct) => onPageProgress(pct, 0, 100)), filename };
     case 'pdf-to-excel':
-      return { kind: 'blob', blob: await pdfToExcel(file, onPageProgress), filename };
+      return { kind: 'blob', blob: await pdfToExcel(file, (pct) => onPageProgress(pct, 0, 100)), filename };
     case 'word-to-pdf':
       return { kind: 'blob', blob: await wordToPdf(file), filename };
     case 'excel-to-pdf':

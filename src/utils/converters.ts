@@ -458,10 +458,7 @@ export async function flattenPdf(file: File): Promise<Blob> {
   return new Blob([new Uint8Array(bytes)], { type: 'application/pdf' });
 }
 
-import { Document as DocxDocument, Packer, Paragraph, TextRun } from 'docx';
-import * as XLSX from 'xlsx';
-import mammoth from 'mammoth';
-import { jsPDF } from 'jspdf';
+
 
 export async function pdfToWord(file: File, onProgress: (pct: number) => void): Promise<Blob> {
   const arrayBuffer = await file.arrayBuffer();
@@ -541,7 +538,7 @@ export async function compressPdf(file: File): Promise<Blob> {
   const pdfDoc = await PDFDocument.load(arrayBuffer);
   // Re-serialize the PDF with object streams to compress structure
   const pdfBytes = await pdfDoc.save({ useObjectStreams: true });
-  return new Blob([pdfBytes], { type: 'application/pdf' });
+  return new Blob([pdfBytes as any], { type: 'application/pdf' });
 }
 
 export async function protectPdf(file: File, password: string): Promise<Blob> {
@@ -561,7 +558,7 @@ export async function protectPdf(file: File, password: string): Promise<Blob> {
     canvas.width = viewport.width;
     canvas.height = viewport.height;
     
-    await page.render({ canvasContext: ctx, viewport }).promise;
+    await page.render({ canvasContext: ctx, viewport } as any).promise;
     
     const imgData = canvas.toDataURL('image/jpeg', 0.85);
     const widthMm = (viewport.width / 2) * 0.264583;
