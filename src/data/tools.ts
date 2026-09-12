@@ -153,10 +153,10 @@ export const tools: Tool[] = [
     id: 'pdf-to-ppt',
     name: 'PDF to PowerPoint',
     description: 'Convert PDF slides into editable .pptx presentations with slide structure intact.',
-    category: 'planned',
+    category: 'core',
     iconName: 'Monitor',
     path: '/tools/pdf-to-ppt',
-    plannedLabel: 'In Development',
+
   },
   {
     id: 'word-to-pdf',
@@ -180,19 +180,19 @@ export const tools: Tool[] = [
     id: 'ppt-to-pdf',
     name: 'PPT to PDF',
     description: 'Export PowerPoint presentations as polished PDF files.',
-    category: 'planned',
+    category: 'core',
     iconName: 'FileOutput',
     path: '/tools/ppt-to-pdf',
-    plannedLabel: 'Coming Soon',
+
   },
   {
     id: 'odt-to-pdf',
     name: 'ODT / ODS / ODP to PDF',
     description: 'Convert LibreOffice Writer, Calc, and Impress documents to PDF.',
-    category: 'planned',
+    category: 'core',
     iconName: 'Files',
     path: '/tools/odt-to-pdf',
-    plannedLabel: 'Coming Soon',
+
   },
   {
     id: 'compress-pdf',
@@ -216,10 +216,10 @@ export const tools: Tool[] = [
     id: 'pages-to-pdf',
     name: 'Pages to PDF',
     description: 'Convert Apple Pages documents to PDF with typography preserved.',
-    category: 'planned',
+    category: 'core',
     iconName: 'BookOpen',
     path: '/tools/pages-to-pdf',
-    plannedLabel: 'Coming Soon',
+
   },
 ];
 

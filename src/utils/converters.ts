@@ -588,3 +588,109 @@ export async function protectPdf(file: File, password: string): Promise<Blob> {
   return new Blob([arrayBufferOut], { type: 'application/pdf' });
 }
 
+
+import pptxgen from "pptxgenjs";
+
+export async function pdfToPpt(file: File, onProgress: (pct: number) => void): Promise<Blob> {
+  const arrayBuffer = await file.arrayBuffer();
+  const pdf = await pdfjsLib.getDocument({ data: arrayBuffer }).promise;
+  const pptx = new pptxgen();
+
+  for (let i = 1; i <= pdf.numPages; i++) {
+    const page = await pdf.getPage(i);
+    const viewport = page.getViewport({ scale: 2.0 });
+    const canvas = document.createElement("canvas");
+    const ctx = canvas.getContext("2d")!;
+    canvas.width = viewport.width;
+    canvas.height = viewport.height;
+    await page.render({ canvasContext: ctx, viewport } as any).promise;
+    
+    const imgData = canvas.toDataURL("image/jpeg", 0.85);
+    
+    const slide = pptx.addSlide();
+    slide.addImage({ data: imgData, x: 0, y: 0, w: "100%", h: "100%" });
+    onProgress((i / pdf.numPages) * 100);
+  }
+
+  const blob = await pptx.write({ outputType: "blob" }) as Blob;
+  return blob;
+}
+
+export async function pptToPdf(file: File, onProgress: (pct: number) => void): Promise<Blob> {
+  const zip = new JSZip();
+  const contents = await zip.loadAsync(file);
+  const pdf = new jsPDF();
+  let pageCount = 0;
+  
+  const slideFiles = Object.keys(contents.files).filter(name => name.match(/ppt\/slides\/slide\d+\.xml/));
+  
+  if (slideFiles.length === 0) {
+    throw new Error("Could not find any slides in this PowerPoint file.");
+  }
+
+  for (let i = 0; i < slideFiles.length; i++) {
+    const slideName = "ppt/slides/slide1.xml";
+    if (!contents.files[slideName]) continue;
+    
+    const xml = await contents.files[slideName].async("text");
+    const matches = xml.match(/<a:t>(.*?)<\/a:t>/g);
+    let text = "";
+    if (matches) {
+      text = matches.map(m => m.replace(/<a:t>/g, "").replace(/<\/a:t>/g, "")).join(" ");
+    }
+    
+    if (pageCount > 0) pdf.addPage();
+    
+    const lines = pdf.splitTextToSize(text || " ", 180);
+    pdf.text(lines, 15, 20);
+    pageCount++;
+    onProgress(((i + 1) / slideFiles.length) * 100);
+  }
+
+  return new Blob([pdf.output("arraybuffer") as any], { type: "application/pdf" });
+}
+
+export async function odtToPdf(file: File): Promise<Blob> {
+  const zip = new JSZip();
+  const contents = await zip.loadAsync(file);
+  const pdf = new jsPDF();
+  
+  if (!contents.files["content.xml"]) {
+    throw new Error("Could not find content.xml in this ODT/ODS/ODP file.");
+  }
+  
+  const xml = await contents.files["content.xml"].async("text");
+  
+  const matches = xml.match(/<text:p[^>]*>(.*?)<\/text:p>/g);
+  let textLines: string[] = [];
+  if (matches) {
+    textLines = matches.map(m => m.replace(/<text:p[^>]*>/g, "").replace(/<\/text:p>/g, "").replace(/<[^>]+>/g, ""));
+  }
+  
+  const fullText = textLines.join("\n");
+  const lines = pdf.splitTextToSize(fullText, 180);
+  
+  let y = 20;
+  for (let i = 0; i < lines.length; i++) {
+    if (y > 280) {
+      pdf.addPage();
+      y = 20;
+    }
+    pdf.text(lines[i], 15, y);
+    y += 7;
+  }
+  
+  return new Blob([pdf.output("arraybuffer") as any], { type: "application/pdf" });
+}
+
+export async function pagesToPdf(file: File): Promise<Blob> {
+  const zip = new JSZip();
+  const contents = await zip.loadAsync(file);
+  
+  if (contents.files["QuickLook/Preview.pdf"]) {
+    const pdfBytes = await contents.files["QuickLook/Preview.pdf"].async("uint8array");
+    return new Blob([pdfBytes as any], { type: "application/pdf" });
+  } else {
+    throw new Error("This Pages document does not contain a QuickLook Preview.pdf. Try saving it in Pages with 'Include preview in document' enabled.");
+  }
+}

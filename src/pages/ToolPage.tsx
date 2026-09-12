@@ -24,6 +24,10 @@ import {
   excelToPdf,
   compressPdf,
   protectPdf,
+  pdfToPpt,
+  pptToPdf,
+  odtToPdf,
+  pagesToPdf
 } from '../utils/converters';
 import type { LucideIcon } from 'lucide-react';
 
@@ -45,7 +49,8 @@ const MULTI_FILE_TOOLS = new Set(['image-to-pdf']);
 const REAL_TOOLS = new Set([
   'image-to-pdf', 'pdf-to-jpg', 'txt-to-pdf',
   'csv-to-pdf', 'html-to-pdf', 'pdf-ocr', 'flatten-pdf',
-  'pdf-to-word', 'pdf-to-excel', 'word-to-pdf', 'excel-to-pdf', 'compress-pdf', 'protect-pdf'
+  'pdf-to-word', 'pdf-to-excel', 'word-to-pdf', 'excel-to-pdf', 'compress-pdf', 'protect-pdf',
+  'pdf-to-ppt', 'ppt-to-pdf', 'odt-to-pdf', 'pages-to-pdf'
 ]);
 
 function ToolIcon({ name, size = 20 }: { name: string; size?: number }) {
@@ -77,6 +82,10 @@ function getOutputFilename(toolId: string, inputName: string): string {
     case 'excel-to-pdf': return `${base}.pdf`;
     case 'compress-pdf': return `${base}-compressed.pdf`;
     case 'protect-pdf': return `${base}-protected.pdf`;
+    case 'pdf-to-ppt': return `${base}.pptx`;
+    case 'ppt-to-pdf': return `${base}.pdf`;
+    case 'odt-to-pdf': return `${base}.pdf`;
+    case 'pages-to-pdf': return `${base}.pdf`;
 
     default: return 'papertrail-output';
   }
@@ -116,10 +125,19 @@ async function runConverter(
       return { kind: 'blob', blob: await excelToPdf(file), filename };
     case 'compress-pdf':
       return { kind: 'blob', blob: await compressPdf(file), filename };
-    case 'protect-pdf':
-      const password = window.prompt('Enter a password to encrypt this PDF:');
-      if (!password) throw new Error('Password is required to protect the PDF.');
+    case 'protect-pdf': {
+      const password = window.prompt("Enter a password to encrypt this PDF:");
+      if (!password) throw new Error("Password is required to encrypt the PDF.");
       return { kind: 'blob', blob: await protectPdf(file, password), filename };
+    }
+    case 'pdf-to-ppt':
+      return { kind: 'blob', blob: await pdfToPpt(file, onProgress), filename };
+    case 'ppt-to-pdf':
+      return { kind: 'blob', blob: await pptToPdf(file, onProgress), filename };
+    case 'odt-to-pdf':
+      return { kind: 'blob', blob: await odtToPdf(file), filename };
+    case 'pages-to-pdf':
+      return { kind: 'blob', blob: await pagesToPdf(file), filename };
     default:
       throw new Error(`No converter implemented for "${toolId}"`);
   }
