@@ -1,32 +1,19 @@
-# React + TypeScript + Vite
+# PaperTrail
 
-This template provides a minimal setup to get React working in Vite with HMR and some Oxlint rules.
+**PDF tools that leave no paper trail.**
 
-Currently, two official plugins are available:
+PaperTrail is a suite of anonymous, privacy-first PDF tools. All standard tools run **100% locally in your browser** using WebAssembly and client-side JavaScript. Your files are never uploaded to any server.
 
-- [@vitejs/plugin-react](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react) uses [Oxc](https://oxc.rs)
-- [@vitejs/plugin-react-swc](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react-swc) uses [SWC](https://swc.rs/)
+## Features
 
-## React Compiler
+- **100% Client-Side**: Tools like compressing, merging, protecting, flattening, and format conversions (Word, Excel, PowerPoint, ODT, Pages) happen entirely inside your browser.
+- **Privacy First**: No accounts, no signups, no tracking.
+- **AI Tools**: Optional AI-powered tools (Chat with PDF, AI Summarizer, etc.) run through a highly secure, rate-limited Google Gemini API, ensuring zero data retention.
+- **Modern UI**: Built with React, TypeScript, and Vite.
 
-The React Compiler is not enabled on this template because of its impact on dev & build performances. To add it, see [this documentation](https://react.dev/learn/react-compiler/installation).
+## Development
 
-## Expanding the Oxlint configuration
-
-If you are developing a production application, we recommend enabling type-aware lint rules by installing `oxlint-tsgolint` and editing `.oxlintrc.json`:
-
-```json
-{
-  "$schema": "./node_modules/oxlint/configuration_schema.json",
-  "plugins": ["react", "typescript", "oxc"],
-  "options": {
-    "typeAware": true
-  },
-  "rules": {
-    "react/rules-of-hooks": "error",
-    "react/only-export-components": ["warn", { "allowConstantExport": true }]
-  }
-}
-```
-
-See the [Oxlint rules documentation](https://oxc.rs/docs/guide/usage/linter/rules) for the full list of rules and categories.
+`ash
+npm install
+npm run dev
+`
