@@ -533,11 +533,53 @@ export async function excelToPdf(file: File): Promise<Blob> {
   return await htmlToPdf(htmlFile);
 }
 
-export async function compressPdf(file: File): Promise<Blob> {
+export async function compressPdf(file: File, level: 'low' | 'medium' | 'high' = 'medium'): Promise<Blob> {
   const arrayBuffer = await file.arrayBuffer();
-  const pdfDoc = await PDFDocument.load(arrayBuffer);
-  // Re-serialize the PDF with object streams to compress structure
-  const pdfBytes = await pdfDoc.save({ useObjectStreams: true });
+
+  // Low compression: just useObjectStreams which losslessly compresses PDF structure
+  if (level === 'low') {
+    const pdfDoc = await PDFDocument.load(arrayBuffer);
+    const pdfBytes = await pdfDoc.save({ useObjectStreams: true });
+    return new Blob([pdfBytes as any], { type: 'application/pdf' });
+  }
+
+  // Medium / High: Rasterize pages to JPEG to force compression of all images/vectors
+  const pdf = await pdfjsLib.getDocument({ data: arrayBuffer }).promise;
+  const newPdfDoc = await PDFDocument.create();
+
+  let scale = level === 'high' ? 1.0 : 1.5;
+  let quality = level === 'high' ? 0.4 : 0.7;
+
+  for (let i = 1; i <= pdf.numPages; i++) {
+    const page = await pdf.getPage(i);
+    const viewport = page.getViewport({ scale });
+    
+    const canvas = document.createElement('canvas');
+    canvas.width = viewport.width;
+    canvas.height = viewport.height;
+    const ctx = canvas.getContext('2d')!;
+    
+    await page.render({ canvasContext: ctx, viewport } as any).promise;
+    
+    // Convert to compressed JPEG
+    const imgDataUrl = canvas.toDataURL('image/jpeg', quality);
+    const imgBytes = await fetch(imgDataUrl).then(res => res.arrayBuffer());
+    
+    const jpgImage = await newPdfDoc.embedJpg(imgBytes);
+    
+    // Use the ORIGINAL viewport dimensions so the PDF size remains physically the same
+    const origViewport = page.getViewport({ scale: 1.0 });
+    const pdfPage = newPdfDoc.addPage([origViewport.width, origViewport.height]);
+    
+    pdfPage.drawImage(jpgImage, {
+      x: 0,
+      y: 0,
+      width: origViewport.width,
+      height: origViewport.height,
+    });
+  }
+
+  const pdfBytes = await newPdfDoc.save({ useObjectStreams: true });
   return new Blob([pdfBytes as any], { type: 'application/pdf' });
 }
 

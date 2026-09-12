@@ -96,6 +96,7 @@ async function runConverter(
   files: File[],
   onProgress: (pct: number) => void,
   onPageProgress: (pct: number, page: number, total: number) => void,
+  options?: any
 ): Promise<ToolOutput> {
   const file = files[0];
   const filename = getOutputFilename(toolId, file.name);
@@ -124,7 +125,7 @@ async function runConverter(
     case 'excel-to-pdf':
       return { kind: 'blob', blob: await excelToPdf(file), filename };
     case 'compress-pdf':
-      return { kind: 'blob', blob: await compressPdf(file), filename };
+      return { kind: 'blob', blob: await compressPdf(file, options?.compressionLevel || 'medium'), filename };
     case 'protect-pdf': {
       const password = window.prompt("Enter a password to encrypt this PDF:");
       if (!password) throw new Error("Password is required to encrypt the PDF.");
@@ -277,6 +278,7 @@ export default function ToolPage() {
   const [dragOver, setDragOver] = useState(false);
   const [output, setOutput] = useState<ToolOutput>(null);
   const [errorMsg, setErrorMsg] = useState('');
+  const [compressionLevel, setCompressionLevel] = useState<'low' | 'medium' | 'high'>('medium');
   const inputRef = useRef<HTMLInputElement | null>(null);
 
   const addFiles = useCallback((incoming: File[]) => {
@@ -358,6 +360,7 @@ export default function ToolPage() {
         files,
         pct => setProgress(pct),
         (pct, page, total) => { setProgress(pct); setPageLabel(`Page ${page} of ${total}`); },
+        { compressionLevel }
       );
       if (fakeTimer) clearInterval(fakeTimer);
       setProgress(100);
@@ -572,6 +575,41 @@ export default function ToolPage() {
                 onRemove={removeFile}
                 onAddMore={() => inputRef.current?.click()}
               />
+            )}
+
+            {/* Compression Options */}
+            {hasFiles && toolId === 'compress-pdf' && (
+              <div className="flex flex-col gap-2 mt-2 px-2">
+                <label className="text-sm font-semibold text-white">Compression Level</label>
+                <div className="flex gap-2">
+                  <button 
+                    onClick={() => setCompressionLevel('low')}
+                    className={`flex-1 py-2 px-3 rounded-lg text-sm transition-all ${compressionLevel === 'low' ? 'bg-[#3ECF8E] text-[#0D1512] font-bold' : 'text-[#3ECF8E] border hover:bg-[#3ECF8E]/20'}`}
+                    style={compressionLevel !== 'low' ? { backgroundColor: 'rgba(62,207,142,0.1)', borderColor: 'rgba(62,207,142,0.2)' } : {}}
+                  >
+                    Low
+                  </button>
+                  <button 
+                    onClick={() => setCompressionLevel('medium')}
+                    className={`flex-1 py-2 px-3 rounded-lg text-sm transition-all ${compressionLevel === 'medium' ? 'bg-[#3ECF8E] text-[#0D1512] font-bold' : 'text-[#3ECF8E] border hover:bg-[#3ECF8E]/20'}`}
+                    style={compressionLevel !== 'medium' ? { backgroundColor: 'rgba(62,207,142,0.1)', borderColor: 'rgba(62,207,142,0.2)' } : {}}
+                  >
+                    Medium
+                  </button>
+                  <button 
+                    onClick={() => setCompressionLevel('high')}
+                    className={`flex-1 py-2 px-3 rounded-lg text-sm transition-all ${compressionLevel === 'high' ? 'bg-[#3ECF8E] text-[#0D1512] font-bold' : 'text-[#3ECF8E] border hover:bg-[#3ECF8E]/20'}`}
+                    style={compressionLevel !== 'high' ? { backgroundColor: 'rgba(62,207,142,0.1)', borderColor: 'rgba(62,207,142,0.2)' } : {}}
+                  >
+                    High
+                  </button>
+                </div>
+                <p className="text-xs mt-1" style={{ color: 'rgba(143,168,155,0.7)' }}>
+                  {compressionLevel === 'low' && 'Best quality, minimal size reduction.'}
+                  {compressionLevel === 'medium' && 'Good balance between quality and file size.'}
+                  {compressionLevel === 'high' && 'Maximum compression. Images may lose quality.'}
+                </p>
+              </div>
             )}
           </div>
         )}
