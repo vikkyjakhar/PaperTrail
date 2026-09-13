@@ -583,21 +583,21 @@ export default function ToolPage() {
                 <label className="text-sm font-semibold text-white">Compression Level</label>
                 <div className="flex gap-2">
                   <button 
-                    onClick={() => setCompressionLevel('low')}
+                    onClick={(e) => { e.stopPropagation(); setCompressionLevel('low'); }}
                     className={`flex-1 py-2 px-3 rounded-lg text-sm transition-all ${compressionLevel === 'low' ? 'bg-[#3ECF8E] text-[#0D1512] font-bold' : 'text-[#3ECF8E] border hover:bg-[#3ECF8E]/20'}`}
                     style={compressionLevel !== 'low' ? { backgroundColor: 'rgba(62,207,142,0.1)', borderColor: 'rgba(62,207,142,0.2)' } : {}}
                   >
                     Low
                   </button>
                   <button 
-                    onClick={() => setCompressionLevel('medium')}
+                    onClick={(e) => { e.stopPropagation(); setCompressionLevel('medium'); }}
                     className={`flex-1 py-2 px-3 rounded-lg text-sm transition-all ${compressionLevel === 'medium' ? 'bg-[#3ECF8E] text-[#0D1512] font-bold' : 'text-[#3ECF8E] border hover:bg-[#3ECF8E]/20'}`}
                     style={compressionLevel !== 'medium' ? { backgroundColor: 'rgba(62,207,142,0.1)', borderColor: 'rgba(62,207,142,0.2)' } : {}}
                   >
                     Medium
                   </button>
                   <button 
-                    onClick={() => setCompressionLevel('high')}
+                    onClick={(e) => { e.stopPropagation(); setCompressionLevel('high'); }}
                     className={`flex-1 py-2 px-3 rounded-lg text-sm transition-all ${compressionLevel === 'high' ? 'bg-[#3ECF8E] text-[#0D1512] font-bold' : 'text-[#3ECF8E] border hover:bg-[#3ECF8E]/20'}`}
                     style={compressionLevel !== 'high' ? { backgroundColor: 'rgba(62,207,142,0.1)', borderColor: 'rgba(62,207,142,0.2)' } : {}}
                   >

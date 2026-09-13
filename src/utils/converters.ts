@@ -547,8 +547,8 @@ export async function compressPdf(file: File, level: 'low' | 'medium' | 'high' =
   const pdf = await pdfjsLib.getDocument({ data: arrayBuffer }).promise;
   const newPdfDoc = await PDFDocument.create();
 
-  let scale = level === 'high' ? 1.0 : 1.5;
-  let quality = level === 'high' ? 0.4 : 0.7;
+  let scale = level === 'high' ? 0.7 : 1.2;
+  let quality = level === 'high' ? 0.3 : 0.6;
 
   for (let i = 1; i <= pdf.numPages; i++) {
     const page = await pdf.getPage(i);
