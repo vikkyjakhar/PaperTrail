@@ -597,7 +597,8 @@ export async function compressPdf(file: File, level: 'low' | 'medium' | 'high' =
   // Failsafe: If rasterizing somehow made the file LARGER (e.g. it was a tiny text-only PDF),
   // fallback to a lossless metadata compression to avoid punishing the user.
   if (pdfBytes.byteLength >= originalSize) {
-    const fallbackDoc = await PDFDocument.load(arrayBuffer);
+    const freshBuffer = await file.arrayBuffer();
+    const fallbackDoc = await PDFDocument.load(freshBuffer);
     const fallbackBytes = await fallbackDoc.save({ useObjectStreams: true });
     return new Blob([fallbackBytes as any], { type: 'application/pdf' });
   }
