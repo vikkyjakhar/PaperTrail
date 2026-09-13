@@ -535,20 +535,29 @@ export async function excelToPdf(file: File): Promise<Blob> {
 
 export async function compressPdf(file: File, level: 'low' | 'medium' | 'high' = 'medium'): Promise<Blob> {
   const arrayBuffer = await file.arrayBuffer();
+  const originalSize = arrayBuffer.byteLength;
 
-  // Low compression: just useObjectStreams which losslessly compresses PDF structure
+  // We rely on rasterizing the PDF pages to heavily compressed JPEGs to hit 
+  // the user's aggressive target size reductions (30%, 60%, 90%).
+  let scale = 1.2;
+  let quality = 0.7;
+
   if (level === 'low') {
-    const pdfDoc = await PDFDocument.load(arrayBuffer);
-    const pdfBytes = await pdfDoc.save({ useObjectStreams: true });
-    return new Blob([pdfBytes as any], { type: 'application/pdf' });
+    // Target ~30% compression
+    scale = 1.0;
+    quality = 0.7;
+  } else if (level === 'medium') {
+    // Target ~60% compression
+    scale = 0.7;
+    quality = 0.5;
+  } else if (level === 'high') {
+    // Target ~80-90% compression
+    scale = 0.4;
+    quality = 0.2;
   }
 
-  // Medium / High: Rasterize pages to JPEG to force compression of all images/vectors
   const pdf = await pdfjsLib.getDocument({ data: arrayBuffer }).promise;
   const newPdfDoc = await PDFDocument.create();
-
-  let scale = level === 'high' ? 0.7 : 1.2;
-  let quality = level === 'high' ? 0.3 : 0.6;
 
   for (let i = 1; i <= pdf.numPages; i++) {
     const page = await pdf.getPage(i);
@@ -561,13 +570,17 @@ export async function compressPdf(file: File, level: 'low' | 'medium' | 'high' =
     
     await page.render({ canvasContext: ctx, viewport } as any).promise;
     
-    // Convert to compressed JPEG
-    const imgDataUrl = canvas.toDataURL('image/jpeg', quality);
-    const imgBytes = await fetch(imgDataUrl).then(res => res.arrayBuffer());
+    // Convert to compressed JPEG using Blob for better memory efficiency
+    const imgBytes = await new Promise<ArrayBuffer>((resolve, reject) => {
+      canvas.toBlob((blob) => {
+        if (!blob) return reject(new Error('Canvas to Blob failed'));
+        blob.arrayBuffer().then(resolve).catch(reject);
+      }, 'image/jpeg', quality);
+    });
     
     const jpgImage = await newPdfDoc.embedJpg(imgBytes);
     
-    // Use the ORIGINAL viewport dimensions so the PDF size remains physically the same
+    // Use the ORIGINAL viewport dimensions so the PDF physical page size remains the same
     const origViewport = page.getViewport({ scale: 1.0 });
     const pdfPage = newPdfDoc.addPage([origViewport.width, origViewport.height]);
     
@@ -580,6 +593,15 @@ export async function compressPdf(file: File, level: 'low' | 'medium' | 'high' =
   }
 
   const pdfBytes = await newPdfDoc.save({ useObjectStreams: true });
+  
+  // Failsafe: If rasterizing somehow made the file LARGER (e.g. it was a tiny text-only PDF),
+  // fallback to a lossless metadata compression to avoid punishing the user.
+  if (pdfBytes.byteLength >= originalSize) {
+    const fallbackDoc = await PDFDocument.load(arrayBuffer);
+    const fallbackBytes = await fallbackDoc.save({ useObjectStreams: true });
+    return new Blob([fallbackBytes as any], { type: 'application/pdf' });
+  }
+
   return new Blob([pdfBytes as any], { type: 'application/pdf' });
 }
 
